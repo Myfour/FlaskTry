@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index</title>
+</head>
+
+<body>
+    {% set navigation=[('/','Home'),('/about','About')] %} {# 自定义一个python对象在模板中 #}
+    {% for item in navigation %}
+    <li>{{item}}</li>
+    {% endfor%}
+
+    {% set navigator %} {# 自定义一块模板对象 #}
+    <li>a</li>
+    <li>b</li>
+    {% endset %}
+
+    {{ navigator }}
+    {{ navigator }}
+    {{ navigator }}
+    {{ navigator }}
+    <!-- 内置上下文变量 -->
+    {{ config }} |
+    {{ request }} |
+    {{ session }} |
+    {{ g }} |
+    <!-- 自定义的上下文变量 -->
+    {{ foo }} |
+    <!-- 内置全局函数 -->
+    <hr>
+    {{ range(4,10) }}
+    {{ lipsum() }}
+    <!-- 自定义全局函数 -->
+    <hr>
+    {{ bar() }}
+    <!-- 过滤器使用 -->
+    <h1>Hello,{{ name|default('陌生人')|title }}!</h1>
+    <!-- 加safe来对输入的内容转义为html -->
+    <h2>{{'<b>haha</b>'}}</h2>
+    <h2>{{'<b>haha</b>'|safe }}</h2>
+    {% if text %}
+    {{ text }}
+    {% endif %}
+    <!-- 自定义过滤器 -->
+    {{ 'Music'|musical }}
+</body>
+
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% block head %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Template - HelloFlask{% endblock %}</title>
+    {% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.min.css')}}">
+    {% endblock %}
+    {% endblock %}
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+        </ul>
+    </nav>
+    <main>
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-primary">{{message}}</div>
+        {% endfor %}
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        {% block footer %}
+        {% endblock %}
+    </footer>
+    {% block scripts %}
+    <script src="https://lib.baomitu.com/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="{{ url_for('static',filename='js/bootstrap.min.js')}}"></script>
+    {% endblock %}
+</body>
+
+</html>
