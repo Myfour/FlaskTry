@@ -58,7 +58,7 @@
             {% if comments %}
             <ul class="list-group">
                 {% for comment in comments %}
-                <li class="list-group-item list-group-item-action flex-column">
+                <li class="list-group-item list-group-item-action flex-column" id="comments{{ comment.id }}">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">
                             <a href="{% if comment.site %}{{ comment.site }}{% else %}#{% endif %}" target="_blank">
@@ -124,7 +124,7 @@
         {% from 'bootstrap/form.html' import render_form %}
         {% if post.can_comment %}
         <div id="comment-form">
-            {{ render_form(form,id='comment-form') }}
+            {{ render_form(form,id='comment-form',action=request.full_path) }}
         </div>
         {% else %}
         <div class="tip">

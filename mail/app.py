@@ -15,16 +15,7 @@ app = Flask(__name__)
 #                   MAIL_DEFAULT_SENDER=('Myfour', 'oz_myx@126.com'),
 #                   SECRET_KEY='SECRET')
 
-# mailgun邮箱配置
-app.config.update(
-    MAIL_SERVER='smtp.mailgun.org',
-    MAIL_USE_TLS=True,
-    MAIL_PORT=587,
-    MAIL_USERNAME=
-    ' postmaster@sandboxe246aec5fba84ff0880cbcaae9fdb6d2.mailgun.org',
-    MAIL_PASSWORD='904882536db88d9317b5078367a33372-e49cc42c-09f94b63',
-    MAIL_DEFAULT_SENDER=('Myfour', 'xxxxxx@xxx.com'),
-    SECRET_KEY='SECRET')
+
 
 mail = Mail(app)  # 这步实例化Mail对象必须在邮箱配置完之后
 

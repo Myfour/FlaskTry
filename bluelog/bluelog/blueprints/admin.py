@@ -114,14 +114,27 @@ def manage_category():
     pagination = Category.query.order_by(Category.name.asc()).paginate(
         page, per_page=current_app.config['BLUELOG_MANAGE_POST_PER_PAGE'])
     categories = pagination.items
-    return render_template('/admin/manage_category.html',
+    return render_template('admin/manage_category.html',
                            pagination=pagination,
                            categories=categories)
 
 
 @admin_bp.route('/managecomment')
 def manage_comment():
-    pass
+    filter_rule = request.args.get('filter', 'all')
+    page = request.args.get('page', 1, type=int)
+    if filter_rule == 'unread':
+        filter_comments = Comment.query.filter_by(reviewed=False)
+    elif filter_rule == 'admin':
+        filter_comments = Comment.query.filter_by(from_admin=True)
+    else:
+        filter_comments = Comment.query
+    pagination = filter_comments.order_by(Comment.timestamp.desc()).paginate(
+        page, per_page=current_app.config['BLUELOG_MANAGE_POST_PER_PAGE'])
+    comments = pagination.items
+    return render_template('admin/manage_comment.html',
+                           pagination=pagination,
+                           comments=comments)
 
 
 @admin_bp.route('/comment/<int:comment_id>/delete', methods=['POST'])
@@ -131,6 +144,25 @@ def delete_comment(comment_id):
     db.session.commit()
     flash('Comment deleted.', 'success')
     return redirect_back()
+
+
+@admin_bp.route('/comment/<int:comment_id>/edit', methods=['GET', 'POST'])
+def edit_comment(comment_id):
+    form = CommentForm()
+    comment = Comment.query.get_or_404(comment_id)
+    if form.validate_on_submit():
+        comment.author = form.author.data
+        comment.email = form.email.data
+        comment.site = form.site.data
+        comment.body = form.body.data
+        db.session.commit()
+        flash('Edit successed.', 'success')
+        return redirect(url_for('.manage_comment'))
+    form.author.data = comment.author
+    form.email.data = comment.email
+    form.site.data = comment.site
+    form.body.data = comment.body
+    return render_template('admin/edit_comment.html', form=form)
 
 
 @admin_bp.route('/comment/<int:post_id>/set', methods=['POST'])
@@ -144,3 +176,12 @@ def set_comment(post_id):
         flash('Comment Eabled.', 'info')
     db.session.commit()
     return redirect(url_for('blog.show_post', post_id=post.id))
+
+
+@admin_bp.route('/comment/<int:comment_id>/approve', methods=['POST'])
+def approve_comment(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    comment.reviewed = True
+    db.session.commit()
+    flash('Comment has approved.', 'success')
+    return redirect_back()
